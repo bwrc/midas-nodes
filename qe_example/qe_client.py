@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import requests
 import time
 
@@ -29,7 +31,6 @@ def print_activity_metrics(addr, node_name):
                 s += ('\033[91m' + str(value).ljust(15) + '\033[0m')
             else:
                 s += str(value).ljust(15)
-
     print(s)
 
 
@@ -46,7 +47,6 @@ def log_activity(addr='http://127.0.0.1:8080'):
 
     except KeyboardInterrupt:
         print("\nBye!")
-
 
 if __name__ == '__main__':
     log_activity()

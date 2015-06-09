@@ -4,7 +4,7 @@ import time
 import sys
 
 
-def print_physiological_state(bb_thr, rr_thr, fh):
+def print_physiological_state(bb_thr, rr_thr):
     """ Retrive and print activity metrics of the specified node. """
     # Format the metric requests
     addr = 'http://127.0.0.1:8080'
@@ -14,7 +14,7 @@ def print_physiological_state(bb_thr, rr_thr, fh):
                   '"time_window":[15]}')
 
     rr_request = ('/ecgnode/metric/'
-                  '{"type":"hrv_mean_hr",'
+                  '{"type":"mean_hr",'
                   '"channels":["ch0"],'
                   '"time_window":[15],'
                   '"arguments":[100]}')
