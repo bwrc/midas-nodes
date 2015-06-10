@@ -31,7 +31,7 @@ def print_physiological_state(bb_thr, rr_thr):
     print('%0.2f\t' % bb + '%0.2f\t' % rr + mwl_class)
 
 
-def log_physiological_state(bb_thr=0.4, rr_thr=62):
+def log_physiological_state(bb_thr=2, rr_thr=65):
     """ MIDAS physiological state logger. """
     try:
         while True:
