@@ -25,13 +25,17 @@ d_ecg, d_fz, d_pz = [equalize(d, n) for d in dset]
 
 # create outlets
 info_ecg = lsl.StreamInfo('n1_ecg', 'ECG', 1, 100, 'float32', 'ecg123')
-info_eeg = lsl.StreamInfo('n1_eeg', 'EEG', 2, 100, 'float32', 'ecg123')
+info_eeg = lsl.StreamInfo('n1_eeg', 'EEG', 2, 100, 'float32', 'eeg123')
 outlet_ecg = lsl.StreamOutlet(info_ecg)
 outlet_eeg = lsl.StreamOutlet(info_eeg)
 
 # stream the data
 print("streaming data")
-for i in range(n):
+i = 0
+while True:
     outlet_ecg.push_sample([d_ecg[i]])
     outlet_eeg.push_sample([d_fz[i], d_pz[i]])
     time.sleep(1.0 / 100.0)
+    i += 1
+    if i >= len(d_ecg) or i >= len(d_fz) or i >= len(d_pz):
+        i = 0
