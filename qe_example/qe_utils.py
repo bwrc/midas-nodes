@@ -2,6 +2,7 @@ import Xlib.display
 import psutil
 import ctypes
 import os
+import netifaces
 
 # --------------------------------------------------
 # Get the application currently in use
@@ -32,13 +33,19 @@ def current_app(x):
         return('ERROR!')
 
 
-def net_stat_sent(x, interface="eth0"):
+def net_stat_sent(x, interface=None):
     """ Get the number of bytes sent."""
+    if not interface:
+        interface = netifaces.interfaces()[1]
+
     return psutil.net_io_counters(pernic=True)[interface].bytes_sent
 
 
-def net_stat_recv(x, interface="eth0"):
+def net_stat_recv(x, interface=None):
     """ Get the number of bytes received. """
+    if not interface:
+        interface = netifaces.interfaces()[1]
+
     return psutil.net_io_counters(pernic=True)[interface].bytes_recv
 
 
