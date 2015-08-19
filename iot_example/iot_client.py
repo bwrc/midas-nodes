@@ -7,17 +7,20 @@ def get_node_list(addr):
     return requests.get(addr + '/status/nodes').json()
 
 
-def scale_value(value):
-    """ Scale sensor value between 0 and 60. """
+def map_value(value, current_min, current_max, new_min=0.0, new_max=1.0):
+    new_value = (value - current_min) / (current_max - current_min)
+    new_value = (new_value * new_max) + new_min
+    return new_value
 
-    if value > 1000:
-        value = 1000
-    elif value < 300:
-        value = 300
 
-    new_value = (value - 300.0) / 700.0
-
-    return round(new_value * 60.0)
+def constrain(value, min_val, max_val):
+    """ Constrains value to a specific range. """
+    if value < min_val:
+        return min_val
+    elif value > max_val:
+        return max_val
+    else:
+        return value
 
 
 def print_luminance_level(addr):
@@ -25,18 +28,20 @@ def print_luminance_level(addr):
     # Format the metric request
     addr += ('/iotnode/metric/'
              '{"type":"mean_luminance",'
-             '"channels":["ch1"],'
+             '"channels":["ch0"],'
              '"time_window":[5]}')
 
     # Request metric
-    value = requests.get(addr).json()[0]['return']
+    value = float(requests.get(addr).json()[0]['return'])
+    value = 120 - constrain(value, 10, 120)
+    value = round(map_value(value, 10, 120, 0, 60))
 
     # Print response to the terminal
     print(time.ctime() +
           " " +
           '\033[93m' +
           '\033[1m' +
-          ('*' * scale_value(value)) +
+          ('*' * value) +
           '\033[0m')
 
 
