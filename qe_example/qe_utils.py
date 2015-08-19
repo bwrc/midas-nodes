@@ -1,14 +1,30 @@
+#!/usr/bin/env python3
+
 import Xlib.display
 import psutil
 import ctypes
 import os
 import netifaces
+from midas import utilities as mu
+
+
+def get_netiface():
+    """ Get the current active network interface. """
+    ip = mu.get_ip()
+    for interface in netifaces.interfaces():
+        addrs = netifaces.ifaddresses(interface)
+        if netifaces.AF_INET in addrs.keys():
+            i_addr = addrs[netifaces.AF_INET][0]['addr']
+            if i_addr == ip:
+                return interface
+
+    # Return None if no interface found
+    return None
+
 
 # --------------------------------------------------
 # Get the application currently in use
 # --------------------------------------------------
-
-
 def current_app(x):
     """ Metric function for MIDAS that returns the
         app currently in focus
@@ -36,17 +52,22 @@ def current_app(x):
 def net_stat_sent(x, interface=None):
     """ Get the number of bytes sent."""
     if not interface:
-        interface = netifaces.interfaces()[1]
+        interface = get_netiface()
 
-    return psutil.net_io_counters(pernic=True)[interface].bytes_sent
+    if interface:
+        return psutil.net_io_counters(pernic=True)[interface].bytes_sent
+    else:
+        return 0
 
 
 def net_stat_recv(x, interface=None):
     """ Get the number of bytes received. """
     if not interface:
-        interface = netifaces.interfaces()[1]
-
-    return psutil.net_io_counters(pernic=True)[interface].bytes_recv
+        interface = get_netiface()
+    if interface:
+        return psutil.net_io_counters(pernic=True)[interface].bytes_recv
+    else:
+        return 0
 
 
 def system_info(x):
