@@ -1,4 +1,4 @@
-# MIDAS NODES
+![MIDAS logo](https://raw.githubusercontent.com/bwrc/midas-nodes/master/midas-nodes-logo.png)
 
 ## Introduction
 
